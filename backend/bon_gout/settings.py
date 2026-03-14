@@ -27,10 +27,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-for-developme
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS from environment or default localhost
-ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOSTS',
-    'localhost,127.0.0.1'
-).split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 if DEBUG:
     ALLOWED_HOSTS.append('*')
 
@@ -157,8 +154,9 @@ SIMPLE_JWT = {
 # CORS CONFIG
 # ==========================================
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
+    "https://fullstack-55iz.onrender.com",
+    "http://localhost:3000",      # React dev server
+    "http://localhost:3001",      # optional
     "http://127.0.0.1:3000",
 ]
 CORS_ALLOW_CREDENTIALS = True
@@ -173,7 +171,9 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://fullstack-55iz.onrender.com"
+]
 # ==========================================
 # MEDIA FILES
 # ==========================================
