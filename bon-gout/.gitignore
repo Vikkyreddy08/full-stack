@@ -1,0 +1,23 @@
+# Python virtual environments
+venv/
+backend/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# React
+node_modules/
+build/
+
+# Logs
+*.log
+debug.log
+
+# Cursor
+.cursor/
