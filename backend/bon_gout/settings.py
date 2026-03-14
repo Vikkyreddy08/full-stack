@@ -7,13 +7,10 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 
-# Load .env file
+# ==========================================
+# LOAD .ENV FILE (LOCAL DEVELOPMENT ONLY)
+# ==========================================
 load_dotenv()
-
-# ==========================================
-# AUTH CONFIGURATION - ✅ CUSTOM USER MODEL
-# ==========================================
-AUTH_USER_MODEL = 'users.User'
 
 # ==========================================
 # BASE DIRECTORY
@@ -23,22 +20,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==========================================
 # SECURITY SETTINGS
 # ==========================================
-SECRET_KEY = os.getenv('SECRET_KEY')
-if not SECRET_KEY:
-    if os.getenv('DEBUG', 'False') == 'True':
-        SECRET_KEY = 'django-insecure-fallback-key-for-development-only'
-    else:
-        from django.core.exceptions import ImproperlyConfigured
-        raise ImproperlyConfigured("The SECRET_KEY setting must not be empty in production.")
+# SECRET_KEY from environment or fallback for development
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-for-development-only')
 
+# DEBUG mode from environment (False by default)
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,10.92.113.142').split(',')
+# ALLOWED_HOSTS from environment or default localhost
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
 if DEBUG:
     ALLOWED_HOSTS.append('*')
 
 # ==========================================
-# APPLICATIONS - ✅ PERFECT ORDER
+# AUTH CONFIGURATION - CUSTOM USER MODEL
+# ==========================================
+AUTH_USER_MODEL = 'users.User'
+
+# ==========================================
+# APPLICATIONS
 # ==========================================
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -48,21 +50,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third-party ✅ CORRECT ORDER
-    'corsheaders',                    # 1st ✅
-    'rest_framework',                 # 2nd ✅
-    'rest_framework_simplejwt',       # 3rd ✅      
+    # Third-party
+    'corsheaders',                    
+    'rest_framework',                 
+    'rest_framework_simplejwt',      
 
-    # Your app
+    # Your apps
     'users',
     'restaurant',
 ]
 
 # ==========================================
-# MIDDLEWARE - ✅ PERFECT ORDER
+# MIDDLEWARE
 # ==========================================
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',     # ✅ 1st (CORRECT!)
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,7 +98,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bon_gout.wsgi.application'
 
 # ==========================================
-# DATABASE - ✅ PRODUCTION READY (MySQL)
+# DATABASE (MySQL) FROM ENV VARIABLES
 # ==========================================
 DATABASES = {
     'default': {
@@ -124,12 +126,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ==========================================
-# REST FRAMEWORK - ✅ FIXED FOR JWT + Router
+# REST FRAMEWORK
 # ==========================================
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',  # ✅ Added for admin
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -137,13 +139,12 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    # ✅ Router pagination (optional)
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100
 }
 
 # ==========================================
-# SIMPLE JWT - ✅ PERFECT
+# SIMPLE JWT
 # ==========================================
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -153,15 +154,13 @@ SIMPLE_JWT = {
 }
 
 # ==========================================
-# CORS - ✅ ENHANCED FOR PRODUCTION
+# CORS CONFIG
 # ==========================================
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3001",
     "http://localhost:3000",
+    "http://localhost:3001",
     "http://127.0.0.1:3000",
-    "http://10.92.113.142:3000",
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -189,13 +188,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']  
 
 # ==========================================
-# EMAIL SETTINGS - ✅ SMART SWITCHING
+# EMAIL SETTINGS
 # ==========================================
 if DEBUG:
-    # In development, print emails to console
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    # In production, use SMTP (must provide valid credentials in .env)
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
@@ -206,12 +203,10 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER or 'webmaster@localhost'
 
 # ==========================================
-# RAZORPAY - ✅ READY
+# RAZORPAY KEYS
 # ==========================================
 RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', '')
 RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', '')
-
-
 
 # ==========================================
 # DEFAULT AUTO FIELD
